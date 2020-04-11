@@ -23,24 +23,24 @@ let fakeServerData = {
       {
         name: 'Discover Weekly', 
         songs: [
-          {name: 'Beat it', duration:1359 }, 
-          {name: 'In the End', duration: 1565}, 
-          {name: 'Wish you were here', duration: 1234}
+          {name: 'Tu hai kaun', duration:1359 }, 
+          {name: 'Fever', duration: 1565}, 
+          {name: 'MindStreet', duration: 1234}
         ]
       },
       {
-        name: 'Our Best Offerings', 
+        name: 'We know you', 
         songs: [
-          {name: 'Beat it', duration: 4553}, 
-          {name: 'In the End', duration:6212 }, 
-          {name: 'Wish you were here', duration:1231 }]
+          {name: 'Godzilla', duration: 4553}, 
+          {name: 'Kyun', duration:6212 }, 
+          {name: 'Gangsta', duration:1231 }]
       },
       {
         name: 'Best of 2019', 
         songs: [
-          {name: 'Beat it', duration:4534 }, 
-          {name: 'In the End', duration:1344 }, 
-          {name: 'Wish you were here', duration:8461 }
+          {name: 'Grenade', duration:4534 }, 
+          {name: 'the wall', duration:1344 }, 
+          {name: 'feel good inc.', duration:8461 }
         ]
       }
     ]
@@ -88,14 +88,13 @@ class HourCounter extends Component {
 
 class Playlist extends Component {
   render() {
+    let playlist = this.props.playlist;
     return (
       <div style={{...defaultStyle, width: '20%', display: `inline-block`}}>
         <img />
-        <h3>Playlist Name</h3>
+        <h3>{playlist.name}</h3>
         <ul>
-          <li>Song 1</li>
-          <li>Song 2</li>
-          <li>Song 3</li> 
+          {playlist.songs.map(pl => <li>{pl.name}</li>)} 
         </ul>
       </div>
     )
@@ -129,9 +128,12 @@ class App extends Component {
             <HourCounter playlists={this.state.serverData.user.playlists}/>
             
             <Filter />
-            <Playlist />
-            <Playlist />
-            <Playlist />
+
+          {
+            this.state.serverData.user.playlists.map(playlist => 
+              <Playlist playlist={playlist}/>
+            )
+          }
           </> : <h1 style={defaultStyle}>Loading...</h1>
         }
       </div>
