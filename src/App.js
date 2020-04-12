@@ -73,7 +73,7 @@ class App extends Component {
   async componentDidMount() {
     let parsed =  queryString.parse(window.location.search);
     let accessToken =  parsed['?access_token'];  
-
+    if(!accessToken) return;
     let apiEndpoint = "https://api.spotify.com/v1/me/"
     let response = await fetch(apiEndpoint, {
       headers: {
