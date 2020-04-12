@@ -134,7 +134,7 @@ class App extends Component {
             onClick={() => {
               window.location = window.location.href.includes('localhost') 
               ? "http://localhost:8888/login" 
-              : "https://hifiproduct.herokuapp.com/login"
+              : "https://hifiproduct-backend.herokuapp.com/login"
             }}
             style={ButtonStyle}
           >
