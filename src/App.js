@@ -1,51 +1,11 @@
 import React, { Component } from 'react';
+import queryString from 'querystring';
 import './App.css';
 
 let defaultStyle = {
   color: `#fff`
 };
 
-let fakeServerData = {
-  user: {
-    name: 'Krab',
-    playlists: [
-      {
-        name: 'My Favorites', 
-        songs: [
-          {
-            name: 'Beat it',  
-            duration: 1352
-          }, 
-            {name: 'In the End', duration: 1662}, 
-            {name: 'Wish you were here', duration: 3652}
-        ]
-      },
-      {
-        name: 'Discover Weekly', 
-        songs: [
-          {name: 'Tu hai kaun', duration:1359 }, 
-          {name: 'Fever', duration: 1565}, 
-          {name: 'MindStreet', duration: 1234}
-        ]
-      },
-      {
-        name: 'We know you', 
-        songs: [
-          {name: 'Godzilla', duration: 4553}, 
-          {name: 'Kyun', duration:6212 }, 
-          {name: 'Gangsta', duration:1231 }]
-      },
-      {
-        name: 'Best of 2019', 
-        songs: [
-          {name: 'Grenade', duration:4534 }, 
-          {name: 'the wall', duration:1344 }, 
-          {name: 'feel good inc.', duration:8461 }
-        ]
-      }
-    ]
-  }
-}
 
 class Filter extends Component {
   render() {
@@ -91,7 +51,7 @@ class Playlist extends Component {
     let playlist = this.props.playlist;
     return (
       <div style={{...defaultStyle, width: '20%', display: `inline-block`}}>
-        <img />
+        <img src={playlist.imageUrl} alt={playlist.name} style={{width: '200px'}}/>
         <h3>{playlist.name}</h3>
         <ul>
           {playlist.songs.map(pl => <li>{pl.name}</li>)} 
@@ -110,38 +70,82 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({serverData: fakeServerData});
-    }, 1000);
+  async componentDidMount() {
+    let parsed =  queryString.parse(window.location.search);
+    let accessToken =  parsed['?access_token'];  
+
+    let apiEndpoint = "https://api.spotify.com/v1/me/"
+    let response = await fetch(apiEndpoint, {
+      headers: {
+        'Authorization': 'Bearer ' + accessToken
+      }
+    });
+    let data = await response.json();
+    this.setState({
+      user: {
+        name: data.display_name
+      }
+    })
+    
+    let playlistEndpoint = "https://api.spotify.com/v1/me/playlists"
+    let playlistRes = await fetch(playlistEndpoint, {
+      headers: {
+        'Authorization': 'Bearer ' + accessToken
+      }
+    });
+    let playlistData = await playlistRes.json();
+    this.setState({
+      playlists: playlistData.items.map(item => ({
+        name: item.name, 
+        songs: [],
+        imageUrl: item.images[0].url
+      }))
+    });
   }
 
   render() {
 
-    let playlistToRender = this.state.serverData.user ?  this.state.serverData.user.playlists
-      .filter(playlist => playlist.name.toLowerCase().includes(this.state.filterString.toLowerCase())): [];
+    let playlistToRender = 
+      this.state.user && 
+      this.state.playlists 
+      ? this.state.playlists.filter(playlist => 
+        playlist.name.toLowerCase().includes(
+          this.state.filterString.toLowerCase()))
+      : [];
 
     return (
       <div className="App">
-        {this.state.serverData.user ?
-          <>
+        {this.state.user 
+        ? <>
             <h1 style={defaultStyle}>
-              {this.state.serverData.user.name}'s Playlist
+              {this.state.user.name}'s Playlist
             </h1>
-            
+
             <PlaylistCounter playlists={playlistToRender}/>        
             <HourCounter playlists={playlistToRender}/>
             
             <Filter onTextChange={text => this.setState({filterString: text})}/>
-
             {playlistToRender.map(playlist => 
               <Playlist playlist={playlist}/>
-            )}
-          </> : <h1 style={defaultStyle}>Loading...</h1>
+            )}            
+          </> 
+          : 
+          <button 
+            onClick={() => window.location="http://localhost:8888/login"}
+            style={ButtonStyle}
+          >
+            Sign in with Spotify
+          </button>
         }
       </div>
     );
   }
+}
+
+const ButtonStyle = {
+  padding: '20px', 
+  fontSize: '50px', 
+  marginTop: '20px'
 }
 
 export default App;
