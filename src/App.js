@@ -40,7 +40,7 @@ class HourCounter extends Component {
 
     return (
       <div className="aggregate" style={{...defaultStyle, width: '40%', display: `inline-block`}}>
-        <h2 style={{color: '#fff'}}>{Math.round((totalDuration/60)/60)} hours</h2>
+        <h2 style={{color: '#fff'}}>{Math.round(totalDuration/60)} minutes</h2>
       </div>
     )
   }
@@ -74,37 +74,63 @@ class App extends Component {
     let parsed =  queryString.parse(window.location.search);
     let accessToken =  parsed['?access_token'];  
     if(!accessToken) return;
-    let apiEndpoint = "https://api.spotify.com/v1/me/"
+
+    /*Fetching and setting User Data from spotify API*/
+    let apiEndpoint = "https://api.spotify.com/v1/me/";    
     let response = await fetch(apiEndpoint, {
       headers: {
         'Authorization': 'Bearer ' + accessToken
       }
     });
-    let data = await response.json();
+    let userData = await response.json();
     this.setState({
       user: {
-        name: data.display_name
+        name: userData.display_name
       }
+    });
+
+    /*Fetching playlist data from api*/
+    let playlistFetch = fetch('https://api.spotify.com/v1/me/playlists', {
+      headers: {'Authorization': 'Bearer ' + accessToken}
     })
-    
-    let playlistEndpoint = "https://api.spotify.com/v1/me/playlists"
-    let playlistRes = await fetch(playlistEndpoint, {
-      headers: {
-        'Authorization': 'Bearer ' + accessToken
-      }
-    });
-    let playlistData = await playlistRes.json();
-    this.setState({
-      playlists: playlistData.items.map(item => ({
-        name: item.name, 
-        songs: [],
-        imageUrl: item.images[0].url
-      }))
-    });
+    let playlistResponse = playlistFetch.then(response => response.json())
+    playlistResponse.then(playlistData => {
+      let playlists = playlistData.items
+      let trackDataPromises = playlists.map(playlist => {
+        let responsePromise = fetch(playlist.tracks.href, {
+          headers: {'Authorization': 'Bearer ' + accessToken}
+        })
+        let trackDataPromise = responsePromise
+          .then(response => response.json())
+        return trackDataPromise
+      })
+      let allTracksDataPromises = 
+        Promise.all(trackDataPromises)
+      let playlistsPromise = allTracksDataPromises.then(trackDatas => {
+        trackDatas.forEach((trackData, i) => {
+          playlists[i].trackDatas = trackData.items
+            .map(item => item.track)
+            .map(trackData => ({
+              name: trackData.name,
+              duration: trackData.duration_ms / 1000
+            }))
+        })
+        return playlists
+      })
+      return playlistsPromise
+    })
+    .then(playlists => this.setState({
+      playlists: playlists.map(item => {
+        return {
+          name: item.name,
+          imageUrl: item.images[0].url, 
+          songs: item.trackDatas.slice(0,3)
+        }
+      })
+    }))
   }
 
   render() {
-
     let playlistToRender = 
       this.state.user && 
       this.state.playlists 
