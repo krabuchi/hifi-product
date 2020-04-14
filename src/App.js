@@ -1,19 +1,40 @@
 import React, { Component } from 'react';
 import queryString from 'querystring';
+import 'reset-css/reset.css';
 import './App.css';
 
 let defaultStyle = {
-  color: `#fff`
+  color: `#fff`,
+  fontFamily: 'Special Elite, cursive',
+  letterSpacing: '1.5px'
 };
 
+let counterStyle = {
+  ...defaultStyle, 
+  width: '40%', 
+  display: `inline-block`,
+  marginBottom: '10px',
+  fontSize: '20px',
+  lineHeight: '30px',
+}
 
 class Filter extends Component {
   render() {
+    const filterInputStyle = {
+      ...defaultStyle,
+      color: 'black',
+      padding: '10px',
+      fontSize: '20px'
+    };
     return (
       <div style={defaultStyle}>
         <img/>
         <span>Filter: </span>
-        <input type="text" onKeyUp={(e) => this.props.onTextChange(e.target.value)}/>
+        <input 
+          type="text" 
+          style={filterInputStyle} 
+          onKeyUp={(e) => this.props.onTextChange(e.target.value)}
+        />
       </div>
     );
   }
@@ -21,9 +42,12 @@ class Filter extends Component {
 
 class PlaylistCounter extends Component {
   render(){
+    let PlaylistCounterStyle = {
+      ...counterStyle
+    };
     return (
-      <div className="aggregate" style={{...defaultStyle, width: '40%', display: `inline-block`}}>
-        <h2 style={{color: '#fff'}}>{this.props.playlists.length} Playlistname: </h2>
+      <div className="aggregate" style={PlaylistCounterStyle}>
+        <h2 style={{color: '#fff'}}>{this.props.playlists.length} Playlists </h2>
       </div>
     )
   }
@@ -38,9 +62,18 @@ class HourCounter extends Component {
       return sum + eachSong.duration;
     }, 0);
 
+    let totalDurationHours = Math.round(totalDuration/60);
+    let isTooLow = totalDurationHours < 44
+
+    let hourCounterStyle = {
+      ...counterStyle,
+      color: isTooLow ? 'red' : 'white',
+      fontWeight: isTooLow ? 'bold' : 'normal',
+    }
+
     return (
-      <div className="aggregate" style={{...defaultStyle, width: '40%', display: `inline-block`}}>
-        <h2 style={{color: '#fff'}}>{Math.round(totalDuration/60)} minutes</h2>
+      <div className="aggregate" style={hourCounterStyle}>
+        <h2>{totalDurationHours} minutes</h2>
       </div>
     )
   }
@@ -49,12 +82,26 @@ class HourCounter extends Component {
 class Playlist extends Component {
   render() {
     let playlist = this.props.playlist;
+
+    let PlaylistStyle = {
+      ...defaultStyle, 
+      width: '24%', 
+      display: `inline-block`,
+      lineHeight: '30px',
+      padding: '10px',
+      backgroundColor: this.props.index % 2 ? '#c0c0c0' : '#808080'
+    };
+
+    let listStyle = {
+      paddingTop: '2px'
+    }
+    
     return (
-      <div style={{...defaultStyle, width: '20%', display: `inline-block`}}>
-        <img src={playlist.imageUrl} alt={playlist.name} style={{width: '200px'}}/>
+      <div style={PlaylistStyle}>
         <h3>{playlist.name}</h3>
-        <ul>
-          {playlist.songs.map(pl => <li>{pl.name}</li>)} 
+        <img src={playlist.imageUrl} alt={playlist.name} style={{width: '200px'}}/>        
+        <ul style={{marginTop: '10px', fontWeight: 'bold'}}>
+          {playlist.songs.map(pl => <li key={pl.name} style={listStyle}>{pl.name}</li>)} 
         </ul>
       </div>
     )
@@ -149,7 +196,10 @@ class App extends Component {
       <div className="App">
         {this.state.user 
         ? <>
-            <h1 style={defaultStyle}>
+            <h1 style={{...defaultStyle,
+              fontSize: '54px',
+              marginTop: '5px'
+            }}>
               {this.state.user.name}'s Playlist
             </h1>
 
@@ -157,8 +207,8 @@ class App extends Component {
             <HourCounter playlists={playlistToRender}/>
             
             <Filter onTextChange={text => this.setState({filterString: text})}/>
-            {playlistToRender.map(playlist => 
-              <Playlist playlist={playlist}/>
+            {playlistToRender.map((playlist, i) => 
+              <Playlist playlist={playlist} index={i} />
             )}            
           </> 
           : 
