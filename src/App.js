@@ -5,7 +5,7 @@ import "./App.css";
 
 import Playlist from "./components/playlist";
 import Filter from "./components/filter";
-import RecommendSongs from "./components/recommendSongs";
+import RecommendSongs from "./components/reccomendSongs/recommendSongs";
 import HourCounter from "./components/hourCounter";
 import PlaylistCounter from "./components/playlistCounter";
 
@@ -30,12 +30,14 @@ class App extends Component {
     this.state = {
       serverData: {},
       filterString: "",
+      accessToken: "",
     };
   }
 
   async componentDidMount() {
     let parsed = queryString.parse(window.location.search);
     let accessToken = parsed["?access_token"];
+    this.setState({ accessToken });
     if (!accessToken) return;
 
     /*Fetching and setting User Data from spotify API*/
@@ -51,24 +53,6 @@ class App extends Component {
         name: userData.display_name,
       },
     });
-
-    let rec = await fetch(
-      "https://api.spotify.com/v1/recommendations?market=IN&seed_artists=4NHQUGzhtTLFvgF5SZesLK&seed_tracks=0c6xIDDpzE81m2q797ordA&min_energy=0.6&min_popularity=50",
-      {
-        headers: { Authorization: "Bearer " + accessToken },
-      }
-    );
-    let recommend = await rec.json();
-    let ar = recommend.tracks.map((track) => ({
-      name: track.album.name,
-      id: track.album.id,
-      image: track.album.images[1].url,
-    }));
-    console.log(recommend.tracks);
-    this.setState({
-      reccomend: ar,
-    });
-
     /*Fetching playlist data from api*/
     let playlistFetch = fetch("https://api.spotify.com/v1/me/playlists", {
       headers: { Authorization: "Bearer " + accessToken },
@@ -131,7 +115,6 @@ class App extends Component {
           })
         : [];
 
-    let recom = this.state.reccomend;
     return (
       <div className="App">
         {this.state.user ? (
@@ -162,7 +145,7 @@ class App extends Component {
                 index={i}
               />
             ))}
-            <RecommendSongs recom={recom} />
+            <RecommendSongs accessToken={this.state.accessToken} />
           </>
         ) : (
           <button

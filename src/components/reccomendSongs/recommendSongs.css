@@ -1,0 +1,51 @@
+.rec-page {
+  margin-top: 2em;
+  border-top: 1px solid #ccc;
+  padding: 1em;
+}
+
+.genre-options {
+  width: 200px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 50px;
+  padding: 0.2em;
+}
+
+.ulStyle {
+  width: calc(100% - 2em);
+  margin: 1em;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 1em;
+}
+
+.liStyle {
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  border-radius: 5px;
+  border: 2px solid #00e64d;
+  overflow: hidden;
+  transition: all 200ms ease-in;
+}
+
+.liStyle:hover {
+  cursor: pointer;
+  box-shadow: 3px 3px 5px rgba(8, 241, 86, 0.5);
+}
+
+.imgStyle {
+  max-width: 320;
+  max-height: 320;
+}
+
+.title {
+  font-size: 2.5em;
+  color: #fff;
+}
+
+.name {
+  font-size: 1.2em;
+  margin: 1em;
+}
