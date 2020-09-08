@@ -5,7 +5,7 @@ import "./App.css";
 
 import Playlist from "./components/playlist";
 import Filter from "./components/filter";
-import RecommendSongs from "./components/reccomendSongs/recommendSongs";
+import RecommendSongs from "./components/reccomendSongs";
 import HourCounter from "./components/hourCounter";
 import PlaylistCounter from "./components/playlistCounter";
 
@@ -92,7 +92,7 @@ class App extends Component {
             return {
               name: item.name,
               imageUrl: item.images[0].url,
-              songs: item.trackDatas.slice(0, 3),
+              songs: item.trackDatas,
             };
           }),
         })

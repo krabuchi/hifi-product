@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./recommendSongs.css";
 
+import Modal from "../modal";
+
 export default function RecommendSongs({ accessToken }) {
   const defGenre = "alt-rock";
   const [tracks, setTracks] = useState([]);
   const [genre, setGenre] = useState([]);
   const [rec, setRec] = useState([]);
+  const [show, setShow] = useState(false);
 
   //Get list of recommended albums
   useEffect(() => {
@@ -31,7 +34,7 @@ export default function RecommendSongs({ accessToken }) {
     getGenre();
   }, []);
 
-  //Fetch 15 albums from user
+  //Fetch 15 albums from user recommendations
   const getRecSongs = async (genre) => {
     let song = await fetch(
       `https://api.spotify.com/v1/recommendations?limit=15&market=IN&seed_genres=${genre}&min_energy=0.6&min_popularity=50`,
@@ -56,6 +59,7 @@ export default function RecommendSongs({ accessToken }) {
     });
     let songObj = await song.json();
     setTracks(songObj.tracks.items);
+    setShow(true);
   };
 
   const handleChange = async (e) => {
@@ -64,6 +68,8 @@ export default function RecommendSongs({ accessToken }) {
     setRec(newSongs);
   };
 
+  const hideModal = () => setShow(false);
+
   return (
     <div className="rec-page">
       <h1 className="title">Recommended Albums</h1>
@@ -71,6 +77,7 @@ export default function RecommendSongs({ accessToken }) {
         <option>alt-rock</option>
         {genre && genre.map((g, i) => <option key={i}>{g}</option>)}
       </select>
+
       <ul className="ulStyle">
         {!rec ? (
           <h1>Loading...</h1>
@@ -87,7 +94,8 @@ export default function RecommendSongs({ accessToken }) {
           ))
         )}
       </ul>
-      {tracks && tracks.map((t) => <p key={t.id}>{t.name}</p>)}
+
+      <Modal show={show} hideModal={hideModal} tracks={tracks} />
     </div>
   );
 }
