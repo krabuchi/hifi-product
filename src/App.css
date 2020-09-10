@@ -1,3 +1,8 @@
-.App {
-  text-align: center;
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap");
+
+:root {
+  --main-font: "Nunito", sans-serif;
+  --blue-dark: #383838;
+  --blue-light: #03d492;
+  --danger-red: rgb(255, 61, 61);
 }

@@ -5,13 +5,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: var(--main-font);
 }
 
 .genre-options {
   display: block;
   font-size: 16px;
   font-family: sans-serif;
-  font-weight: 700;
+  font-weight: 600;
   color: #444;
   line-height: 1.3;
   padding: 0.6em 1.4em 0.5em 0.8em;
@@ -58,6 +59,7 @@
   border: 2px solid #00e64d;
   overflow: hidden;
   transition: all 200ms ease-in;
+  font-size: 0.9em;
 }
 
 .liStyle:hover {
@@ -78,69 +80,4 @@
 .name {
   font-size: 1.2em;
   margin: 1em;
-}
-
-/* Modal styling display block or none*/
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(121, 121, 121, 0.589);
-}
-
-.modal-main {
-  position: fixed;
-  background: #f2f2f2;
-  width: 100%;
-  min-width: 200px;
-  max-width: 500px;
-  min-height: 200px;
-  max-height: 500px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  border-radius: 5px;
-  overflow: scroll;
-}
-
-.title-bar {
-  position: sticky;
-  font-size: 2em;
-  padding: 0.5em;
-  border-bottom: 2px solid #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.display-block {
-  display: block;
-}
-
-.display-none {
-  display: none;
-}
-
-.song-list {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.song-name {
-  padding: 0.2em;
-  font-size: 1.2em;
-}
-
-.cross-mark {
-  cursor: pointer;
-  font-size: 0.7em;
 }

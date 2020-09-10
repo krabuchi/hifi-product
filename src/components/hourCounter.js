@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function HourCounter({ counterStyle, playlists }) {
+export default function HourCounter({ playlists }) {
   let allSongs = playlists.reduce((songs, playlist) => {
     return songs.concat(playlist.songs);
   }, []);
@@ -11,14 +11,10 @@ export default function HourCounter({ counterStyle, playlists }) {
   let totalDurationHours = Math.round(totalDuration / 60);
   let isTooLow = totalDurationHours < 44;
 
-  let hourCounterStyle = {
-    ...counterStyle,
-    color: isTooLow ? "red" : "white",
-    fontWeight: isTooLow ? "bold" : "normal",
-  };
+  let hourCounterStyle = isTooLow ? "red" : "aggregate";
 
   return (
-    <div className="aggregate" style={hourCounterStyle}>
+    <div className={hourCounterStyle}>
       <h2>{totalDurationHours} minutes</h2>
     </div>
   );

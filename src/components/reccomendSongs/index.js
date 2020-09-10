@@ -9,6 +9,7 @@ export default function RecommendSongs({ accessToken }) {
   const [genre, setGenre] = useState([]);
   const [rec, setRec] = useState([]);
   const [show, setShow] = useState(false);
+  const [albumData, setAlbumData] = useState({});
 
   //Get list of recommended albums
   useEffect(() => {
@@ -53,12 +54,13 @@ export default function RecommendSongs({ accessToken }) {
   };
 
   //Display List of songs in album
-  const displaySong = async (href) => {
+  const displaySong = async (href, img, name) => {
     let song = await fetch(href, {
       headers: { Authorization: "Bearer " + accessToken },
     });
     let songObj = await song.json();
     setTracks(songObj.tracks.items);
+    setAlbumData({ img: img, name: name });
     setShow(true);
   };
 
@@ -83,7 +85,11 @@ export default function RecommendSongs({ accessToken }) {
           <h1>Loading...</h1>
         ) : (
           rec.map((r, i) => (
-            <li onClick={() => displaySong(r.href)} key={i} className="liStyle">
+            <li
+              onClick={() => displaySong(r.href, r.image, r.name)}
+              key={i}
+              className="liStyle"
+            >
               <img
                 className="imgStyle"
                 src={r.image}
@@ -95,7 +101,12 @@ export default function RecommendSongs({ accessToken }) {
         )}
       </ul>
 
-      <Modal show={show} hideModal={hideModal} tracks={tracks} />
+      <Modal
+        show={show}
+        hideModal={hideModal}
+        albumData={albumData}
+        tracks={tracks}
+      />
     </div>
   );
 }
