@@ -2,7 +2,12 @@
 
 :root {
   --main-font: "Nunito", sans-serif;
-  --blue-dark: #383838;
+  --blue-dark: #046e3d;
   --blue-light: #03d492;
   --danger-red: rgb(255, 61, 61);
+}
+
+body {
+  width: 100%;
+  background: #fcf9f9;
 }

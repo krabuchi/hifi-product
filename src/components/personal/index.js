@@ -56,7 +56,7 @@ export default function Personal({ name, accessToken }) {
   return (
     <div className="users-top-page">
       <h1 className="name-type">
-        {name} Top {type} 🎼{" "}
+        {name} top {type} 🎼{" "}
       </h1>
       <div className="type-button-container">
         <button onClick={handleType} value="tracks">

@@ -11,7 +11,7 @@ export default function HourCounter({ playlists }) {
   let totalDurationHours = Math.round(totalDuration / 60);
   let isTooLow = totalDurationHours < 44;
 
-  let hourCounterStyle = isTooLow ? "red" : "aggregate";
+  let hourCounterStyle = isTooLow ? "red" : "ag";
 
   return (
     <div className={hourCounterStyle}>

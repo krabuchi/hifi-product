@@ -1,30 +1,57 @@
 .user-playlist-item {
   font-family: var(--main-font);
-  background: var(--blue-light);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border-radius: 5px;
+  padding: 0;
+  transition: all 250ms ease-in;
+  border: 2px solid rgb(58, 58, 58);
 }
 
 .user-playlist-item img {
-  position: relative;
-  top: -5px;
-  transition: all 250ms ease-in;
-  width: 100%;
-  border-radius: 5px;
+  max-width: 100%;
 }
 
-.user-playlist-item img:hover {
+.user-playlist-item:hover {
   top: -8px;
   cursor: pointer;
   transform: scale(1.01);
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  border: 4px solid rgb(40, 231, 113);
+  box-shadow: 2px 4px 4px 2px rgba(0, 0, 0, 0.4);
 }
 
 .user-playlist-item h2 {
-  color: #fff;
+  color: var(--blue-dark);
+  padding: 0.5em;
   font-size: 1.15em;
   font-weight: 400;
+}
+
+.aggregate {
+  font-size: 1.5em;
+  font-family: var(--main-font);
+  margin-top: 1.2em;
+  border-top: 1px solid var(--blue-light);
+  padding: 1em 0;
+}
+
+.ag {
+  font-size: 1.2em;
+  font-family: var(--main-font);
+  margin: 1em;
+}
+
+.filter {
+  margin: 0.5em;
+  font-family: var(--main-font);
+}
+.filter input {
+  font-family: var(--main-font);
+  font-size: 1.2em;
+  padding: 0.1em 0.3em;
+  outline: none;
+  border: 2px solid rgb(40, 231, 113);
+  border-radius: 5px;
 }

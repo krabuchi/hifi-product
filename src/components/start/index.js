@@ -4,8 +4,8 @@ import queryString from "querystring";
 import "./style.css";
 
 import Playlist from "../playlist/playlist";
-import Filter from "../filter";
-import HourCounter from "../hourCounter";
+import Filter from "../playlist/filter";
+import HourCounter from "../playlist/hourCounter";
 import PlaylistCounter from "../playlist/playlistCounter";
 
 import RecommendSongs from "../reccomendSongs";
@@ -33,6 +33,7 @@ class Start extends Component {
     let response = await fetch(apiEndpoint, {
       headers: {
         Authorization: "Bearer " + accessToken,
+        Accept: "application/json",
       },
     });
 
@@ -111,7 +112,7 @@ class Start extends Component {
         {this.state.user ? (
           <>
             <h1 className="user-name-head">Welcome {user.name}</h1>
-            {/*<Mood accessToken={accessToken} />*/}
+            <Mood accessToken={accessToken} />
             <Personal name={user.name} accessToken={accessToken} />
             <PlaylistCounter playlists={playlistToRender} />
             <HourCounter playlists={playlistToRender} />

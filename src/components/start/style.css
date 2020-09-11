@@ -10,10 +10,12 @@
 .user-playlists {
   width: calc(100% - 2.4em);
   height: 100%;
+  max-width: 900px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-gap: 1em;
-  margin: 1.2em;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 200px));
+  justify-content: center;
+  grid-gap: 1.5rem;
+  margin: 1.2em auto;
 }
 
 .aggregate {

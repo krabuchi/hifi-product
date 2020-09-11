@@ -5,7 +5,7 @@ export default class Filter extends Component {
     const { onTextChange } = this.props;
 
     return (
-      <div>
+      <div className="filter">
         <span>Filter: </span>
         <input type="text" onKeyUp={(e) => onTextChange(e.target.value)} />
       </div>

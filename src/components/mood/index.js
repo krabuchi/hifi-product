@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./style.css";
 
 export default function Mood({ accessToken }) {
   const [tracks, setTracks] = useState([]);
@@ -6,7 +7,7 @@ export default function Mood({ accessToken }) {
 
   useEffect(() => {
     const getTracks = async () => {
-      const url = `https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=100`;
+      const url = `https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=50`;
       const resp = await fetch(url, {
         headers: { Authorization: "Bearer " + accessToken },
       });
@@ -14,8 +15,9 @@ export default function Mood({ accessToken }) {
       setTracks(results.items);
 
       const features = results.items.map((item) => item.id).join(",");
+      console.log(features);
       const audioFeatures = await getAudioFeatures(features);
-      setArtistList(audioFeatures);
+      setArtistList(audioFeatures["audio_features"]);
     };
     getTracks();
   }, []);
@@ -29,60 +31,51 @@ export default function Mood({ accessToken }) {
     return results;
   };
 
+  const getTracks = async (list) => {
+    const ids = list.map((el) => el.id).join(",");
+    const uri = `https://api.spotify.com/v1/tracks?ids=${ids}`;
+    const response = await fetch(uri, {
+      headers: { Authorization: "Bearer " + accessToken },
+    });
+    const results = await response.json();
+    setTracks(results.tracks);
+  };
+
   const handleMoodChange = (e) => {
     let val = Number(e.target.value) / 10;
-    const tr = artistList.filter((el) => {
-      if (
-        val < 0.1 &&
-        el.valence <= val + 0.15 &&
-        el.danceability <= (val * 8) / 10 &&
-        el.energy <= val
-      ) {
-        return el.id;
-      } else if (
-        val <= 0.2 &&
-        el.valence <= val + 0.75 &&
-        el.danceability <= (val * 4) / 10 &&
-        el.energy <= (val * 5) / 10
-      ) {
-        return el.id;
-      } else if (
-        val <= 0.5 &&
-        el.valence <= val + 0.05 &&
-        el.danceability <= (val * 1.75) / 10 &&
-        el.energy <= (val * 1.75) / 10
-      ) {
-        return el.id;
-      } else if (
-        val <= 0.7 &&
-        el.valence <= val + 0.075 &&
-        el.danceability <= val / 2.5 / 10 &&
-        el.energy <= val / 2 / 10
-      ) {
-        return el.id;
-      } else if (
-        val <= 0.9 &&
-        el.valence <= val + 0.075 &&
-        el.danceability <= val / 2 / 10 &&
-        el.energy <= val / 1.5 / 10
-      ) {
-        return el.id;
-      } else if (
-        val <= 0.9 &&
-        el.valence <= val + 1 &&
-        el.danceability <= val / 1.75 / 10 &&
-        el.energy <= val / 1.5 / 10
-      ) {
-        return el.id;
-      }
-    });
-    console.log(tr);
+    if (val >= 0 && val < 0.25) {
+      const sad = artistList.filter(
+        (el) => el.valence < 0.25 && el.valence > 0
+      );
+      getTracks(sad);
+    } else if (val >= 0.26 && val < 0.49) {
+      const nice = artistList.filter(
+        (el) => el.valence < 0.49 && el.valence > 0.26
+      );
+      getTracks(nice);
+    } else if (val >= 0.5 && val < 0.69) {
+      const happy = artistList.filter(
+        (el) => el.valence < 0.69 && el.valence > 0.5
+      );
+      getTracks(happy);
+    } else if (val >= 0.7 && val < 0.89) {
+      const party = artistList.filter(
+        (el) => el.valence < 0.89 && el.valence > 0.7
+      );
+      getTracks(party);
+    } else if (val >= 0.9 && val <= 1) {
+      const exited = artistList.filter(
+        (el) => el.valence < 1 && el.valence > 0.9
+      );
+      console.log(exited);
+      getTracks(exited);
+    }
   };
 
   return (
-    <div>
-      <h1>Mood</h1>
-      <div>
+    <div className="mood-container">
+      <h1 className="mood-title">How do You feel</h1>
+      <div className="mood-range">
         <span role="img" aria-label="sad-emoji">
           😢
         </span>
@@ -97,11 +90,12 @@ export default function Mood({ accessToken }) {
           🙂
         </span>
       </div>
-      <ul>
-        {tracks.map((t) => (
-          <li key={t.id}>{t.name}</li>
-        ))}
+      <ul className="mood-track-list">
+        {tracks && tracks.map((t) => <li key={t.id}>{t.name}</li>)}
       </ul>
+      <small className="small-notification">
+        Listen more songs for better experience
+      </small>
     </div>
   );
 }
