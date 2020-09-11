@@ -18,7 +18,7 @@ export default function RecommendSongs({ accessToken }) {
       setRec(data);
     };
     getData();
-  });
+  }, []);
 
   //Get list of all genres
   useEffect(() => {
