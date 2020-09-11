@@ -18,7 +18,7 @@ export default function RecommendSongs({ accessToken }) {
       setRec(data);
     };
     getData();
-  }, []);
+  });
 
   //Get list of all genres
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function RecommendSongs({ accessToken }) {
       setGenre(results.genres);
     };
     getGenre();
-  }, []);
+  });
 
   //Fetch 15 albums from user recommendations
   const getRecSongs = async (genre) => {

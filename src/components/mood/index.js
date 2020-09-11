@@ -15,7 +15,6 @@ export default function Mood({ accessToken }) {
       setTracks(results.items);
 
       const features = results.items.map((item) => item.id).join(",");
-      console.log(features);
       const audioFeatures = await getAudioFeatures(features);
       setArtistList(audioFeatures["audio_features"]);
     };
@@ -67,7 +66,6 @@ export default function Mood({ accessToken }) {
       const exited = artistList.filter(
         (el) => el.valence < 1 && el.valence > 0.9
       );
-      console.log(exited);
       getTracks(exited);
     }
   };
